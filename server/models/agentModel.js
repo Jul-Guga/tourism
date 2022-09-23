@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const operatorSchema = mongoose.Schema(
+const agentSchema = mongoose.Schema(
   {
     name: {
       type: String,
@@ -21,4 +21,4 @@ const operatorSchema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("OperatorUser", operatorSchema);
+module.exports = mongoose.model("Agent", agentSchema);

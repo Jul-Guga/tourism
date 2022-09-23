@@ -4,7 +4,7 @@ const TourPackage = require("../models/tourPackagesModel");
 
 // @desc    Get Packages
 // @route   GET /api/tour-packages
-// @access  Private
+// @access  Public
 const getPackages = asyncHandler(async (req, res) => {
   const tourPackages = await TourPackage.find();
   res.status(200).json(tourPackages);
@@ -25,9 +25,18 @@ const setPackages = asyncHandler(async (req, res) => {
     duration,
   } = req.body;
 
-  if (!title) {
+  if (
+    !title ||
+    !description ||
+    !image ||
+    !images ||
+    !price ||
+    !location ||
+    !rating ||
+    !duration
+  ) {
     res.status(400);
-    throw new Error("Please add a title field");
+    throw new Error("Please fill all fields");
   }
 
   const tourPackage = await TourPackage.create({
@@ -39,6 +48,7 @@ const setPackages = asyncHandler(async (req, res) => {
     location,
     rating,
     duration,
+    agent: req.agent.id,
   });
 
   res.status(200).json(tourPackage);
@@ -52,7 +62,19 @@ const updatePackage = asyncHandler(async (req, res) => {
 
   if (!tourPackage) {
     res.status(400);
-    throw new Error("Tour package not found.");
+    throw new Error("Tour package not found");
+  }
+
+  // Check for agent
+  if (!req.agent) {
+    res.status(401);
+    throw new Error("Agent is not found");
+  }
+
+  // Make sure the logged in agent matches the package agent
+  if (tourPackage.agent.toString() !== req.agent.id) {
+    res.status(401);
+    throw new Error("Agent not authorized");
   }
 
   const updatedTourPackage = await TourPackage.findByIdAndUpdate(
@@ -75,11 +97,25 @@ const deletePackage = asyncHandler(async (req, res) => {
     throw new Error("Tour package not found.");
   }
 
+  // Check for agent
+  if (!req.agent) {
+    res.status(401);
+    throw new Error("Agent is not found");
+  }
+
+  // Make sure the logged in agent matches the package agent
+  console.log("first", req.agent);
+
+  if (tourPackage.agent.toString() !== req.agent.id) {
+    res.status(401);
+    throw new Error("Agent not authorized");
+  }
+
   const deletedTourPackage = await TourPackage.deleteOne({
     _id: req.params.id,
   });
 
-  res.status(200).json(deletedTourPackage);
+  res.status(200).json({ id: req.params.id });
 });
 
 module.exports = { getPackages, setPackages, updatePackage, deletePackage };

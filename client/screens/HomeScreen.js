@@ -1,35 +1,23 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { auth } from "../firebase.config";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
 
-  const handleSignOut = () => {
-    auth
-      .signOut()
-      .then(() => {
-        navigation.replace("Login");
-      })
-      .catch((error) => {
-        console.log(error);
-        Alert.alert(error.message);
-      });
-  };
+  const handleSignOut = () => {};
 
   return (
     <View style={styles.container}>
-       <View style={styles.bottomContainer}>
-      <Text style={{fontWeight:"bold"}}>Email: {auth.currentUser?.email} </Text>
-      
-      <TouchableOpacity onPress={handleSignOut} style={styles.button}>
-        <Text style={styles.buttonText}>Sign out</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={()=>{navigation.navigate("Users")}} style={styles.button}>
-        <Text style={styles.buttonText}>User Dashboard</Text>
-        
-      </TouchableOpacity>
+      <View style={styles.bottomContainer}>
+        <Text style={{ fontWeight: "bold" }}>Email:</Text>
+
+        <TouchableOpacity onPress={handleSignOut} style={styles.button}>
+          <Text style={styles.buttonText}>Sign out</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => {}} style={styles.button}>
+          <Text style={styles.buttonText}>User Dashboard</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -56,10 +44,10 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 16,
   },
-  bottomContainer:{
-    width:"100%",
+  bottomContainer: {
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor:"#e4f2f7",
-  }
+    backgroundColor: "#e4f2f7",
+  },
 });

@@ -1,7 +1,7 @@
 const express = require("express");
 const colors = require("colors");
 const dotenv = require("dotenv").config();
-const { errorHandler } = require("./middleware/errorMiddleware");
+const { errorHandler } = require("./middlewares/errorMiddleware");
 const connectDB = require("./config/db");
 const PORT = process.env.PORT || 5000;
 
@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/tour-packages", require("./routes/tourPackagesRouter"));
-app.use("/api/operators", require("./routes/operatorRoutes"));
+app.use("/api/agents", require("./routes/agentRoutes"));
 
 app.use(errorHandler);
 

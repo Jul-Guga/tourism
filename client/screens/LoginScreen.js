@@ -1,12 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import {
-  Alert,
   KeyboardAvoidingView,
   StyleSheet,
   Text,
@@ -14,45 +8,43 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { auth } from "../firebase.config";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../features/auth/authSlice";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  const { agent, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        navigation.navigate("Home");
-      }
-    });
-  }, []);
+    console.log(isError);
+    console.log(isSuccess);
+    console.log(agent);
+    // if (isError) {
+    //   Alert(message);
+    // }
+    // if (isSuccess || agent) {
+    //   navigation.navigate("Home");
+    // }
+    // dispatch(reset());
+  }, [agent, isLoading, isError, isSuccess, message, navigation, dispatch]);
 
   const handleSignUp = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        console.log("Registered with:", user.email);
-      })
-      .catch((error) => {
-        console.log(error);
-        Alert.alert(error.message);
-      });
+    const userData = {
+      email,
+      password,
+    };
+
+    dispatch(register(userData));
   };
 
-  const handleLogIn = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        console.log("Logged in with:", user.email);
-      })
-      .catch((error) => {
-        console.log(error);
-        Alert.alert(error.message);
-      });
-  };
+  const handleLogIn = () => {};
 
   return (
     <KeyboardAvoidingView style={styles.container}>

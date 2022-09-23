@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 
 const packageSchema = mongoose.Schema(
   {
-    user: {
+    agent: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "OperatorUser",
+      ref: "Agent",
     },
     description: {
       type: String,
